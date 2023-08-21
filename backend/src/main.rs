@@ -4,9 +4,8 @@ use warp::Filter;
 
 #[tokio::main]
 async fn main() {
-    // GET /hello/warp => 200 OK with body "Hello, warp!"
-    let hello = warp::path!("posts" / String).map(|post_slug: String| {
-        let file_path = format!("posts/{}.md", post_slug);
+    let blog = warp::path!("posts" / String).map(|post_slug: String| {
+        let file_path = format!("content/posts/{}.md", post_slug);
         let markdown_content =
             fs::read_to_string(&file_path).unwrap_or_else(|_| String::from("Post not found"));
 
@@ -17,5 +16,5 @@ async fn main() {
         warp::reply::html(html_output)
     });
 
-    warp::serve(hello).run(([127, 0, 0, 1], 3030)).await;
+    warp::serve(blog).run(([127, 0, 0, 1], 3030)).await;
 }
